@@ -4,21 +4,24 @@
 #include <cmath>
 #include <iostream>
 
+// This is used for both color and position
+
 class vec3 {
   public:
-    double e[3];
+    double e[3]; // Dimensions
 
     // Contructors
     vec3() : e{0,0,0} {}
     vec3(double e0, double e1, double e2) : e{e0, e1, e2} {}
 
+    // Returns individual coordinates
     double x() const { return e[0]; }
     double y() const { return e[1]; }
     double z() const { return e[2]; }
 
-    vec3 operator-() const { return vec3(-e[0], -e[1], -e[2]); }
-    double operator[](int i) const { return e[i]; }
-    double& operator[](int i) { return e[i]; }
+    vec3 operator-() const { return vec3(-e[0], -e[1], -e[2]); } // Returns negative coordinates
+    double operator[](int i) const { return e[i]; } // Returns individual coordinates
+    double& operator[](int i) { return e[i]; } // Same but if object was a reference
 
     vec3& operator+=(const vec3& v) {
         e[0] += v.e[0];
@@ -52,8 +55,9 @@ using point3 = vec3;
 
 
 // Vector Utility Functions
+// Non-member functions for readability of arguments like u and v
 
-inline std::ostream& operator<<(std::ostream& out, const vec3& v) {
+inline std::ostream& operator<<(std::ostream& out, const vec3& v) { // Useful for outputting vec3 to streams
     return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
 }
 

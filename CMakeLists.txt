@@ -5,6 +5,8 @@ set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
 
 add_executable(raytrace src/main.cpp)
 
+target_include_directories(raytrace PRIVATE include/)
+
 include(CTest)
 enable_testing()
 
