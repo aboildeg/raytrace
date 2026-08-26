@@ -14,15 +14,15 @@ double hit_sphere(const point3& center, double radius, const ray& r) {
     if (discriminant < 0) {
         return -1.0;
     } else {
-        return (-b - std::sqrt(discriminant)) / (2.0*a);
+        return (-b - std::sqrt(discriminant)) / (2.0*a); // Entire quadratic equation - THen returns either positive or negative t values
     }
 }
 
 color ray_color(const ray& r) {
     double t = hit_sphere(point3(0, 0, -1), 0.5, r);
-    if (t > 0.0) {
-        vec3 n = unit_vector(r.at(t) - vec3(0, 0, -1));
-        return 0.5*color(n.x() + 1, n.y() + 1, n.z() + 1);
+    if (t > 0.0) { // Make sure the sphere ain't behind the camera
+        vec3 n = unit_vector(r.at(t) - vec3(0, 0, -1)); // Creates a normal vector at that point and normalizes it
+        return 0.5*color(n.x() + 1, n.y() + 1, n.z() + 1); // Maps xyz to rgb
     }
     vec3 unit_direction = unit_vector(r.direction());
     double a = 0.5*(unit_direction.y() + 1.0); // viewport y goes up to 1 and down to -1 so add 1 to offset the -1 to 0
