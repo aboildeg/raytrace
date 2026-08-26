@@ -1,6 +1,11 @@
 #include <iostream>
 #include "color.h"
 #include "vec3.h"
+#include "ray.h"
+
+color ray_color(const ray& r) {
+    return color(0, 0, 0);
+}
 
 int main() {
 
@@ -16,6 +21,21 @@ int main() {
     double viewport_height = 2.0; // Arbitrary number
     double viewport_width = viewport_height * (static_cast<double>(image_width) / image_height); // We use image_width and height because they might be slightly off from actual aspect ratio due to rounding errors
 
+    // Camera
+    point3 camera_origin = point3(0, 0, 0); // Origin
+    double focal_length = 1.0;
+    
+    // Calculate viewport vectors
+    vec3 viewport_u = vec3(viewport_width, 0, 0);
+    vec3 viewport_v = vec3(0, -viewport_height, 0);
+
+    // Calculate u and v delta vectors from each pixel
+    vec3 pixel_delta_u = viewport_u / image_width;
+    vec3 pixel_delta_v = viewport_v / image_height;
+
+    // Location of uppoer left pixel
+    point3 viewport_origin = camera_origin - vec3(0, 0, focal_length) - viewport_u / 2 - viewport_v / 2;
+    point3 pixel00 = viewport_origin + 0.5 * (pixel_delta_u + pixel_delta_v);
 
     // Render
 
@@ -24,11 +44,11 @@ int main() {
     for (int j = 0; j < image_height; j++) {
         std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush; // Progress Reporting
         for (int i = 0; i < image_width; i++) {
-            double r = double(i) / (image_width-1);
-            double g = double(j) / (image_height-1);
-            double b = 0.0;
+            point3 pixel = pixel00 + (i * pixel_delta_u) + (j * pixel_delta_v);
+            vec3 ray_direction = pixel - camera_origin;
 
-            color pixel_color = color(r, g, b);
+            ray r = ray(camera_origin, ray_direction);
+            color pixel_color = ray_color(r);
 
             write_color(std::cout, pixel_color);
         }

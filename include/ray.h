@@ -23,6 +23,6 @@ class ray {
         point3 at(double t) const {
             return orig + t*dir;
         }
-}
+};
 
 #endif
