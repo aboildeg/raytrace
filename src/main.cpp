@@ -4,19 +4,25 @@
 #include "ray.h"
 
 // Whole buncha complicated maths about finding where a ray intersects a sphere
-bool hit_sphere(const point3& center, double radius, const ray& r) {
+double hit_sphere(const point3& center, double radius, const ray& r) {
     vec3 oc = center - r.origin(); // This is the
     // This sets up a quadratic equation
     double a = dot(r.direction(), r.direction());
     double b = -2.0 * dot(r.direction(), oc);
     double c = dot(oc, oc) - radius*radius;
     double discriminant = b*b - 4*a*c; 
-    return (discriminant >= 0); // Greater than 0 - 2 roots, zero, 1 root, less than, 0 roots
+    if (discriminant < 0) {
+        return -1.0;
+    } else {
+        return (-b - std::sqrt(discriminant)) / (2.0*a);
+    }
 }
 
 color ray_color(const ray& r) {
-    if (hit_sphere(point3(0, 0, -1), 0.5, r)) {
-        return color(1, 0, 0);
+    double t = hit_sphere(point3(0, 0, -1), 0.5, r);
+    if (t > 0.0) {
+        vec3 n = unit_vector(r.at(t) - vec3(0, 0, -1));
+        return 0.5*color(n.x() + 1, n.y() + 1, n.z() + 1);
     }
     vec3 unit_direction = unit_vector(r.direction());
     double a = 0.5*(unit_direction.y() + 1.0); // viewport y goes up to 1 and down to -1 so add 1 to offset the -1 to 0
