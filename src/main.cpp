@@ -3,8 +3,24 @@
 #include "vec3.h"
 #include "ray.h"
 
+// Whole buncha complicated maths about finding where a ray intersects a sphere
+bool hit_sphere(const point3& center, double radius, const ray& r) {
+    vec3 oc = center - r.origin(); // This is the
+    // This sets up a quadratic equation
+    double a = dot(r.direction(), r.direction());
+    double b = -2.0 * dot(r.direction(), oc);
+    double c = dot(oc, oc) - radius*radius;
+    double discriminant = b*b - 4*a*c; 
+    return (discriminant >= 0); // Greater than 0 - 2 roots, zero, 1 root, less than, 0 roots
+}
+
 color ray_color(const ray& r) {
-    return color(0, 0, 0);
+    if (hit_sphere(point3(0, 0, -1), 0.5, r)) {
+        return color(1, 0, 0);
+    }
+    vec3 unit_direction = unit_vector(r.direction());
+    double a = 0.5*(unit_direction.y() + 1.0); // viewport y goes up to 1 and down to -1 so add 1 to offset the -1 to 0
+    return (1.0 - a)*color(1.0, 1.0, 1.0) + a*color(0.5, 0.7, 1.0);
 }
 
 int main() {
