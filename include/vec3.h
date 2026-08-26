@@ -45,7 +45,7 @@ class vec3 {
         return std::sqrt(length_squared());
     }
 
-    double length_squared() const {
+    double length_squared() const { // Dot product with itself
         return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
     }
 };

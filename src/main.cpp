@@ -5,16 +5,16 @@
 
 // Whole buncha complicated maths about finding where a ray intersects a sphere
 double hit_sphere(const point3& center, double radius, const ray& r) {
-    vec3 oc = center - r.origin(); // This is the
+    vec3 oc = center - r.origin(); // This is the (C - Q) in the vector form of the sphere equation
     // This sets up a quadratic equation
     double a = dot(r.direction(), r.direction());
-    double b = -2.0 * dot(r.direction(), oc);
+    double h = dot(r.direction(), oc);
     double c = dot(oc, oc) - radius*radius;
-    double discriminant = b*b - 4*a*c; 
+    double discriminant = h*h - a*c; 
     if (discriminant < 0) {
         return -1.0;
     } else {
-        return (-b - std::sqrt(discriminant)) / (2.0*a); // Entire quadratic equation - THen returns either positive or negative t values
+        return (h - std::sqrt(discriminant)) / h; // Entire quadratic equation - Then returns either positive or negative t values
     }
 }
 
